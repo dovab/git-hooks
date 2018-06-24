@@ -1,12 +1,12 @@
 #!/usr/bin/php
 <?php
 
-if (file_exists('vendor/autoload.php')) {
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
     require __DIR__.'/vendor/autoload.php';
-} elseif (file_exists(__DIR__.'/../../autoload.php')) {
-    require __DIR__.'/../../autoload.php';
-} elseif (file_exists(__DIR__.'/../../vendor/autoload.php') {
-    require __DIR__.'/vendor/../../autoload.php';
+} elseif (file_exists(realpath(__DIR__.'/../../autoload.php'))) {
+    require realpath(__DIR__.'/../../autoload.php');
+} elseif (file_exists(__DIR__.'/../../vendor/autoload.php')) {
+    require __DIR__.'/../../vendor/autoload.php';
 }
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -48,7 +48,7 @@ class CodeQualityTool extends Application
     {
         parent::__construct('Code Quality Tool', '1.0.0');
 
-        $this->rootPath = realpath(__DIR__.'/../../');
+        $this->rootPath = realpath(__DIR__.'/../../../');
         $this->binPath = realpath($this->rootPath.'/vendor/bin');
     }
 
@@ -76,14 +76,14 @@ class CodeQualityTool extends Application
             throw new Exception('There are some PHP syntax errors!');
         }
 
-        $output->writeln('<info>Checking code style</info>');
+        $output->writeln('<info>Fixing code style</info>');
         if (!$this->autoFixCodeStyle($files)) {
-            throw new Exception(sprintf('There are coding standards violations!'));
+            throw new Exception(sprintf('Could not auto fix everything!'));
         }
 
         $output->writeln('<info>Checking code style with PHPCS</info>');
         if (!$this->checkCodeStyle($files)) {
-            throw new Exception(sprintf('There are PHPCS coding standards violations!'));
+            throw new Exception(sprintf('There are coding standard violations which could not be fixed automatically!'));
         }
 
         /*$output->writeln('<info>Checking code mess with PHPMD</info>');
@@ -243,7 +243,7 @@ class CodeQualityTool extends Application
                 $this->output->writeln(sprintf('<error>%s</error>', trim($phpCsFixer->getOutput())));
 
                 if ($succeed) {
-                    $succeed = false;
+                    $succeed = true;
                 }
             }
         }
@@ -267,6 +267,7 @@ class CodeQualityTool extends Application
             }
 
             $phpCsFixer = new Process(sprintf('%s/phpcs --standard=Dovab %s', $this->binPath, $file), $this->rootPath);
+            $phpCsFixer->enableOutput();
             $phpCsFixer->run();
 
             if (!$phpCsFixer->isSuccessful()) {
