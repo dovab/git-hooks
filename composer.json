@@ -1,0 +1,24 @@
+{
+  "name": "dovab/githooks",
+  "description": "Default GIT hooks for my projects",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Wouter Carabain",
+      "email": "wcarabain@gmail.com"
+    }
+  ],
+  "scripts": {
+    "post-install-cmd": [
+      "bash install-hooks.sh"
+    ],
+    "post-update-cmd": [
+      "bash install-hooks.sh"
+    ]
+  },
+  "require": {
+    "dovab/coding-standard-rules": "*",
+    "friendsofphp/php-cs-fixer": "^2.12"
+  }
+}
