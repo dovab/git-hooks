@@ -4,9 +4,9 @@ PWD=$(pwd)
 
 bash vendor/dovab/coding-standard-rules/install-rulesets.sh
 
-echo "Installing GIT Hooks..."
+printf "Installing GIT Hooks...\n"
 if [ ! -L $PWD/.git/hooks/post-checkout ] ; then
-    echo "\tInstall post-checkout hook"
+   printf "\tInstall post-checkout hook\n"
 
     if [ -f $PWD/.git/hooks/post-checkout ]; then
         mv $PWD/.git/hooks/post-checkout $PWD/.git/hooks/post-checkout.local
@@ -16,7 +16,7 @@ if [ ! -L $PWD/.git/hooks/post-checkout ] ; then
 fi
 
 if [ ! -L $PWD/.git/hooks/post-merge ] ; then
-    echo "\tInstall post-merge hook"
+   printf "\tInstall post-merge hook\n"
 
     if [ -f $PWD/.git/hooks/post-merge ]; then
         mv $PWD/.git/hooks/post-merge $PWD/.git/hooks/post-merge.local
@@ -26,7 +26,7 @@ if [ ! -L $PWD/.git/hooks/post-merge ] ; then
 fi
 
 if [ ! -L $PWD/.git/hooks/pre-commit ] ; then
-    echo "\tInstall pre-commit hook"
+   printf "\tInstall pre-commit hook\n"
 
     if [ -f $PWD/.git/hooks/pre-commit ]; then
         mv $PWD/.git/hooks/pre-commit $PWD/.git/hooks/pre-commit.local
