@@ -1,5 +1,5 @@
 {
-  "name": "dovab/githooks",
+  "name": "dovab/git-hooks",
   "description": "Default GIT hooks for my projects",
   "minimum-stability": "stable",
   "license": "proprietary",
@@ -9,16 +9,9 @@
       "email": "wcarabain@gmail.com"
     }
   ],
-  "scripts": {
-    "post-install-cmd": [
-      "bash install-hooks.sh"
-    ],
-    "post-update-cmd": [
-      "bash install-hooks.sh"
-    ]
-  },
   "require": {
-    "dovab/coding-standard-rules": "*",
-    "friendsofphp/php-cs-fixer": "^2.12"
+    "dovab/coding-standard-rules": "^1",
+    "friendsofphp/php-cs-fixer": "^2.12",
+    "symfony/phpunit-bridge": "^4.1"
   }
 }

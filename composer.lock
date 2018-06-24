@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c142bf858d713f729a82624fc5d0abee",
+    "content-hash": "8bf43ef66fda606b8e6aacec29040630",
     "packages": [
         {
             "name": "composer/semver",
@@ -236,16 +236,16 @@
         },
         {
             "name": "dovab/coding-standard-rules",
-            "version": "1.0.0",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dovab/coding-standard-ruleset.git",
-                "reference": "b888aeda532f9e19229ac1d9452ab1370682e758"
+                "reference": "b8834d8b807dafe407610bd875112049bbbfbbdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dovab/coding-standard-ruleset/zipball/b888aeda532f9e19229ac1d9452ab1370682e758",
-                "reference": "b888aeda532f9e19229ac1d9452ab1370682e758",
+                "url": "https://api.github.com/repos/dovab/coding-standard-ruleset/zipball/b8834d8b807dafe407610bd875112049bbbfbbdb",
+                "reference": "b8834d8b807dafe407610bd875112049bbbfbbdb",
                 "shasum": ""
             },
             "require": {
@@ -264,7 +264,7 @@
                 }
             ],
             "description": "Default phpcs rules for my projects",
-            "time": "2018-06-24T05:27:51+00:00"
+            "time": "2018-06-24T05:56:02+00:00"
         },
         {
             "name": "escapestudios/symfony2-coding-standard",
@@ -889,6 +889,72 @@
                 "options"
             ],
             "time": "2018-05-30T07:26:09+00:00"
+        },
+        {
+            "name": "symfony/phpunit-bridge",
+            "version": "v4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/phpunit-bridge.git",
+                "reference": "b3451fc442baaf9169e50491a059ef17582c4424"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b3451fc442baaf9169e50491a059ef17582c4424",
+                "reference": "b3451fc442baaf9169e50491a059ef17582c4424",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0"
+            },
+            "suggest": {
+                "ext-zip": "Zip support is required when using bin/simple-phpunit",
+                "symfony/debug": "For tracking deprecated interfaces usages at runtime with DebugClassLoader"
+            },
+            "bin": [
+                "bin/simple-phpunit"
+            ],
+            "type": "symfony-bridge",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.1-dev"
+                },
+                "thanks": {
+                    "name": "phpunit/phpunit",
+                    "url": "https://github.com/sebastianbergmann/phpunit"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Bridge\\PhpUnit\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony PHPUnit Bridge",
+            "homepage": "https://symfony.com",
+            "time": "2018-05-25T14:55:38+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
