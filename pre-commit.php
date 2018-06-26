@@ -76,6 +76,11 @@ class CodeQualityTool extends Application
             throw new Exception('There are some PHP syntax errors!');
         }
 
+        $output->writeln('<info>Checking for debug code</info>');
+        if (!$this->checkForDebugCode($files)) {
+            throw new Exception('There is still debug code in this commit!');
+        }
+
         $output->writeln('<info>Fixing code style</info>');
         if (!$this->autoFixCodeStyle($files)) {
             throw new Exception(sprintf('Could not auto fix everything!'));
@@ -169,6 +174,35 @@ class CodeQualityTool extends Application
                 if ($succeed) {
                     $succeed = false;
                 }
+            }
+        }
+
+        return $succeed;
+    }
+
+    /**
+     * @param array $files
+     *
+     * @return bool
+     */
+    private function checkForDebugCode(array $files)
+    {
+        $needle = self::PHP_FILES_IN_SRC;
+        $succeed = true;
+
+        foreach ($files as $file) {
+            if (!preg_match($needle, $file)) {
+                continue;
+            }
+
+            if (false !== strpos(file_get_contents(sprintf('%s/%s', $this->rootPath, $file)), 'dump(')) {
+                $this->output->writeln(sprintf('dump found in %s', $file));
+                $succeed = false;
+            }
+
+            if (false !== strpos(file_get_contents(sprintf('%s/%s', $this->rootPath, $file)), 'var_dump(')) {
+                $this->output->writeln(sprintf('var_dump found in %s', $file));
+                $succeed = false;
             }
         }
 
