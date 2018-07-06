@@ -270,11 +270,11 @@ class CodeQualityTool extends Application
                 continue;
             }
 
-            $phpCsFixer = new Process(sprintf('%s/php-cs-fixer fix %s --fixers=@Symfony', $this->binPath, $file), $this->rootPath);
-            $phpCsFixer->run();
+            $phpCbf = new Process(sprintf('%s/phpcbf --standard=Dovab %s', $this->binPath, $file), $this->rootPath);
+            $phpCbf->run();
 
-            if (!$phpCsFixer->isSuccessful()) {
-                $this->output->writeln(sprintf('<error>%s</error>', trim($phpCsFixer->getOutput())));
+            if (!$phpCbf->isSuccessful()) {
+                $this->output->writeln(sprintf('<error>%s</error>', trim($phpCbf->getOutput())));
 
                 if ($succeed) {
                     $succeed = true;
@@ -300,12 +300,12 @@ class CodeQualityTool extends Application
                 continue;
             }
 
-            $phpCsFixer = new Process(sprintf('%s/phpcs --standard=Dovab %s', $this->binPath, $file), $this->rootPath);
-            $phpCsFixer->enableOutput();
-            $phpCsFixer->run();
+            $phpCs = new Process(sprintf('%s/phpcs --standard=Dovab %s', $this->binPath, $file), $this->rootPath);
+            $phpCs->enableOutput();
+            $phpCs->run();
 
-            if (!$phpCsFixer->isSuccessful()) {
-                $this->output->writeln(sprintf('<error>%s</error>', trim($phpCsFixer->getOutput())));
+            if (!$phpCs->isSuccessful()) {
+                $this->output->writeln(sprintf('<error>%s</error>', trim($phpCs->getOutput())));
 
                 if ($succeed) {
                     $succeed = false;
