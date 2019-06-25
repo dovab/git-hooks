@@ -39,6 +39,11 @@ class CodeQualityTool extends Application
      */
     private $binPath;
 
+    /**
+     * @var array
+     */
+    private $settings = [];
+
     const PHP_FILES_IN_SRC = '/^src\/(.*)(\.php)$/';
 
     /**
@@ -50,6 +55,11 @@ class CodeQualityTool extends Application
 
         $this->rootPath = realpath(__DIR__.'/../../../');
         $this->binPath = realpath($this->rootPath.'/vendor/bin');
+
+        if (file_exists($this->rootPath.'/.githook-settings')) {
+            $this->settings = json_decode(file_get_contents($this->rootPath.'/.githook-settings'), true);
+            var_dump($this->settings);
+        }
     }
 
     /**
@@ -65,6 +75,11 @@ class CodeQualityTool extends Application
         $this->output = $output;
 
         $output->writeln('<fg=white;options=bold;bg=red>Dovab Code Quality Tool</fg=white;options=bold;bg=red>');
+        if (true === $this->checkIsBranchWhitelisted()) {
+            $output->writeln('<info>Skipping checks for this branch, since it is whitelisted</info>');
+            return;
+        }
+
         $output->writeln('<info>Fetching files</info>');
         $files = $this->extractCommitedFiles();
 
@@ -102,6 +117,41 @@ class CodeQualityTool extends Application
         }
 
         $output->writeln('<info>Everything checks out!</info>');
+    }
+
+    /**
+     * Skip code checks for whitelisted branches
+     */
+    private function checkIsBranchWhitelisted()
+    {
+        if (false === isset($this->settings['precommit-skip-branches'])) {
+            return false;
+        }
+
+        $output = array();
+        $rc = '';
+
+        exec('git rev-parse --abbrev-ref HEAD 2> /dev/null', $output, $rc);
+        if (false === isset($output[0])) {
+            throw new \Exception('Could not determine the current GIT branch.');
+        }
+
+        $branch = $output[0];
+        if ('' === $branch || null === $branch) {
+            throw new \Exception('Could not determine the current GIT branch.');
+        }
+
+        if (false === is_array($this->settings['precommit-skip-branches'])) {
+            $this->settings['precommit-skip-branches'] = [$this->settings['precommit-skip-branches']];
+        }
+
+        foreach ($this->settings['precommit-skip-branches'] as $branchToSkip) {
+            if (false !== stripos($branch, $branchToSkip)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
