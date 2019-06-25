@@ -58,7 +58,6 @@ class CodeQualityTool extends Application
 
         if (file_exists($this->rootPath.'/.githook-settings')) {
             $this->settings = json_decode(file_get_contents($this->rootPath.'/.githook-settings'), true);
-            var_dump($this->settings);
         }
     }
 
