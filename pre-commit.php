@@ -44,6 +44,15 @@ class CodeQualityTool extends Application
      */
     private $settings = [];
 
+    /**
+     * @var array
+     */
+    private $forbiddenFunctions = [
+        'dump',
+        'var_dump',
+        'is_null',
+    ];
+
     const PHP_FILES_IN_SRC = '/^src\/(.*)(\.php)$/';
 
     /**
@@ -51,13 +60,17 @@ class CodeQualityTool extends Application
      */
     public function __construct()
     {
-        parent::__construct('Code Quality Tool', '1.0.0');
+        parent::__construct('Code Quality Tool', '1.0.8');
 
         $this->rootPath = realpath(__DIR__.'/../../../');
         $this->binPath = realpath($this->rootPath.'/vendor/bin');
 
         if (file_exists($this->rootPath.'/.githook-settings')) {
             $this->settings = json_decode(file_get_contents($this->rootPath.'/.githook-settings'), true);
+
+            if (is_array($this->settings['forbidden-functions'])) {
+                $this->forbiddenFunctions += $this->settings['forbidden-functions'];
+            }
         }
     }
 
@@ -90,9 +103,9 @@ class CodeQualityTool extends Application
             throw new Exception('There are some PHP syntax errors!');
         }
 
-        $output->writeln('<info>Checking for debug code</info>');
-        if (!$this->checkForDebugCode($files)) {
-            throw new Exception('There is still debug code in this commit!');
+        $output->writeln('<info>Checking for forbidden functions</info>');
+        if (!$this->checkForForbiddenFunctions($files)) {
+            throw new Exception('There are still forbidden functions in this commit!');
         }
 
         $output->writeln('<info>Fixing code style</info>');
@@ -234,7 +247,7 @@ class CodeQualityTool extends Application
      *
      * @return bool
      */
-    private function checkForDebugCode(array $files)
+    private function checkForForbiddenFunctions(array $files)
     {
         $needle = self::PHP_FILES_IN_SRC;
         $succeed = true;
@@ -244,14 +257,12 @@ class CodeQualityTool extends Application
                 continue;
             }
 
-            if (false !== strpos(file_get_contents(sprintf('%s/%s', $this->rootPath, $file)), 'dump(')) {
-                $this->output->writeln(sprintf('dump found in %s', $file));
-                $succeed = false;
-            }
-
-            if (false !== strpos(file_get_contents(sprintf('%s/%s', $this->rootPath, $file)), 'var_dump(')) {
-                $this->output->writeln(sprintf('var_dump found in %s', $file));
-                $succeed = false;
+            foreach ($this->forbiddenFunctions as $forbiddenFunction) {
+                $fileData = file_get_contents($file);
+                if (preg_match(sprintf('`%s\s*?\(`mi', $forbiddenFunction), $fileData)) {
+                    $this->output->writeln(sprintf('%s found in %s', $forbiddenFunction, $file));
+                    $succeed = false;
+                }
             }
         }
 
